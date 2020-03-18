@@ -87,6 +87,7 @@ public class Main {
 
         System.out.println("Unsorted Array:" + Arrays.toString(intArray));
         System.out.println("Merge Sort:" + Arrays.toString(Sort.mergeSort(intArray)));
+        System.out.println("Merge Sort:" + Arrays.toString(Sort.quickSort(intArray)));
     }
 }
 

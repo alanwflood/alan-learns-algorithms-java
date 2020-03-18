@@ -1,11 +1,72 @@
-import java.util.Arrays;
-
 public class Sort {
-    // This method is just here to remove mutation
+    int [] input;
+
+    public Sort(int[] input) {
+        this.input = input.clone();
+    }
+
     public static int[] mergeSort(int [] input) {
-        int [] sortedArray = input.clone();
-        splitPhase(sortedArray, 0, sortedArray.length);
-        return sortedArray;
+        return MergeSort.sort(input);
+    }
+
+    public static int[] quickSort(int [] input) {
+        return QuickSort.sort(input);
+    }
+}
+
+class QuickSort {
+    public static int[] sort(int [] input) {
+        return input;
+    }
+
+    private static void quickSort(int[] input, int start, int end) {
+        // Dealing with one element array so return
+        if (end - start < 2)  {
+            return;
+        }
+
+        // Sort the array using the pivot and return the pivot index
+        int pivotIndex = partition(input, start, end);
+        // Get left subarray
+        quickSort(input, start, pivotIndex);
+        // Get right subarray
+        quickSort(input, pivotIndex + 1, end);
+    }
+
+    private static int partition(int[] input, int start, int end) {
+        // This is using the first element as the pivot
+        int pivot = input[start];
+        int i = start;
+        int j = end;
+
+        // Sort left and right of the pivot now
+
+        // While i/j has not crossed each other
+        while (i < j) {
+            // Check elements right to left
+            while (i < j && input[--j] >= pivot);
+            if (i < j) {
+                input[i] = input[j];
+            }
+
+            // Check elements left to right
+            while (i < j && input[++i] <= pivot);
+            if (i < j) {
+                input[j] = input[i];
+            }
+        }
+        // Insert the pivot
+        input [j] = pivot;
+        // Return the location of the pivot
+        return j;
+    }
+}
+
+class MergeSort {
+    // This method is just here to remove mutation
+    public static int[] sort(int [] input) {
+        splitPhase(input, 0, input.length);
+        return input;
     }
 
     private static void splitPhase(int [] input, int start, int end) {
