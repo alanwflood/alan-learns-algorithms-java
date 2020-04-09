@@ -1,27 +1,118 @@
 public class Sort {
-    int [] input;
+    int[] input;
 
     public Sort(int[] input) {
         this.input = input.clone();
     }
 
-    public static int[] mergeSort(int [] input) {
+    public static int[] selectionSort(int[] input) {
+        return SelectionSort.sort(input);
+    }
+
+    public static int[] insertionSort(int[] input) {
+        return InsertionSort.sort(input);
+    }
+
+    public static int[] shellSort(int[] input) {
+        return ShellSort.sort(input);
+    }
+
+    public static int[] mergeSort(int[] input) {
         return MergeSort.sort(input);
     }
 
-    public static int[] quickSort(int [] input) {
+    public static int[] quickSort(int[] input) {
         return QuickSort.sort(input);
     }
 }
 
+class SelectionSort {
+    public static int[] sort(int[] array) {
+        // Go through the sorted values from right to left
+        for (int lastUnsortedIndex = array.length - 1; lastUnsortedIndex > 0; lastUnsortedIndex--) {
+            int largest = 0;
+            // Go through the unsorted values left to right, to find the largest value
+            for (int i = 0; i <= lastUnsortedIndex; i++) {
+                if (array[i] > array[largest]) {
+                    largest = i;
+                }
+            }
+            // Swap the largest value with the lastUnsortedIndex's value
+            swap(array, largest, lastUnsortedIndex);
+        }
+        return array;
+    }
+
+    private static void swap(int[] array, int i, int j) {
+        if (i == j) {
+            return;
+        }
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
+class InsertionSort {
+    public static int[] sort(int[] array) {
+        // Loop over the unsorted partition
+        for (int unsortedIndex = 1; unsortedIndex < array.length; unsortedIndex++) {
+            // Get the new element
+            int newElement = array[unsortedIndex];
+            // This is the index that newElement will eventually be assigned to
+            int i;
+            // Loop over the sorted partition from right to left, and compare values
+            for (i = unsortedIndex; i > 0 && array[i - 1] > newElement; i--) {
+                // Shifting values here
+                array[i] = array[i - 1];
+            }
+            // Assign the new element
+            array[i] = newElement;
+        }
+        return array;
+    }
+}
+
+class ShellSort {
+    public static int[] sort(int[] array) {
+        // Setup up the loop using the gap value to reduce it every loop
+        for (int gap = array.length / 2; gap > 0; gap /= 2) {
+            // Loop over the array using the gap value
+            for (int i = gap; i < array.length; i++) {
+                // Assign the element to be sorted
+                int newElement = array[i];
+                // Assign a holder for the index to the traversing
+                int j = i;
+
+                // While the index is greater than or equal to the gap value
+                // (If it's less we've hit the front of the array)
+                // and the value in the array located at the index minus the gap
+                // is greater than the element to be moved
+                while ((j >= gap) && (array[j - gap] > newElement)) {
+                    // Shift the value at the current index
+                    // to that of the last iteration
+                    array[j] = array[j - gap];
+                    // Decrement the index by the gap amount so
+                    // we can compare the next element or break the loop
+                    j -= gap;
+                }
+
+                // Assign the value at j to the sorted element
+                array[j] = newElement;
+            }
+        }
+        return array;
+    }
+}
+
 class QuickSort {
-    public static int[] sort(int [] input) {
+    public static int[] sort(int[] input) {
         return input;
     }
 
     private static void quickSort(int[] input, int start, int end) {
         // Dealing with one element array so return
-        if (end - start < 2)  {
+        if (end - start < 2) {
             return;
         }
 
@@ -44,19 +135,19 @@ class QuickSort {
         // While i/j has not crossed each other
         while (i < j) {
             // Check elements right to left
-            while (i < j && input[--j] >= pivot);
+            while (i < j && input[--j] >= pivot) ;
             if (i < j) {
                 input[i] = input[j];
             }
 
             // Check elements left to right
-            while (i < j && input[++i] <= pivot);
+            while (i < j && input[++i] <= pivot) ;
             if (i < j) {
                 input[j] = input[i];
             }
         }
         // Insert the pivot
-        input [j] = pivot;
+        input[j] = pivot;
         // Return the location of the pivot
         return j;
     }
@@ -64,18 +155,18 @@ class QuickSort {
 
 class MergeSort {
     // This method is just here to remove mutation
-    public static int[] sort(int [] input) {
+    public static int[] sort(int[] input) {
         splitPhase(input, 0, input.length);
         return input;
     }
 
-    private static void splitPhase(int [] input, int start, int end) {
+    private static void splitPhase(int[] input, int start, int end) {
         // If we have a one element array, return the sorted array;
         if (end - start < 2) {
             return;
         }
 
-        int midpoint = (start + end)  / 2;
+        int midpoint = (start + end) / 2;
         // Recursively split the left side of the array
         splitPhase(input, start, midpoint);
         // Recursively split the right side of the array
@@ -84,7 +175,7 @@ class MergeSort {
         mergePhase(input, start, midpoint, end);
     }
 
-    private static void mergePhase(int [] input, int start, int midpoint, int end) {
+    private static void mergePhase(int[] input, int start, int midpoint, int end) {
         // (Optimization:) If the last element in the left array is less than the first element in the right
         // The whole array is already sorted so just return and skip this merge phase
         if (input[midpoint - 1] <= input[midpoint]) {
